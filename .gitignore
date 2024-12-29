@@ -3,4 +3,4 @@ package-lock.json
 frontend
 backend/datasets/
 backend/processed_data/
-
+.env
