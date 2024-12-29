@@ -1,10 +1,34 @@
 import streamlit as st
 import pickle
 import requests
+import os
+
+
+def load_key(file_path='.env'):
+    try:
+        with open(file_path, 'r') as file:
+            for line in file.readlines():
+                line = line.strip()
+                if not line or line.startswith('#') or line.startswith('//'):
+                    continue
+                if line.startswith('TMDB_API_KEY'):
+                    return line.split('=')[1].strip()
+            return None
+    except FileNotFoundError:
+        print("The .env file was not found. Please make sure you have it in the correct location.")
+        return None
+    except Exception as e:
+        print(f"An error occurred while loading the key: {str(e)}")
+        return None
+
+TMDB_API_KEY = load_key('../.env')
+if TMDB_API_KEY is None:
+    print("Key not found. Please make sure you have the key in the correct location.")
+    print("Enter key like this: TMDB_API_KEY=\{your_api_key\}")
 
 # Function to fetch posters using the movie API
 def fetch_posters(movie_id):
-    response = requests.get(f'https://api.themoviedb.org/3/movie/{movie_id}?api_key=184d0e180327fe8ba5b71c7e0553076d&language=en-US').json()
+    response = requests.get(f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={TMDB_API_KEY}&language=en-US').json()
     if 'poster_path' in response and response['poster_path'] is not None:
         poster_path = response['poster_path']
         url = 'https://image.tmdb.org/t/p/w600_and_h900_bestv2'
