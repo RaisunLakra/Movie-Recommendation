@@ -1,8 +1,6 @@
 import streamlit as st
 import pickle
 import requests
-import os
-
 
 def load_key(file_path='.env'):
     try:
